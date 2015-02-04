@@ -29,6 +29,21 @@
 }
 
 
+/*	Вывод комментов в качестве названия */
+
+.testwood-comment {
+	display: none;	
+	font-size: 2.5rem;
+	font-weight: 300;
+	font-family: monospace;
+	text-align: right;
+}
+
+.testwood-comments .testwood-comment {
+	display: block;
+}
+
+
 /*	Границы контейнеров @bounds */
 
 .testwood-bounds [data-test] * {
@@ -46,7 +61,7 @@
 }
 
 
-/*	Разлиновка по высоте строки */
+/*	Разлиновка по высоте строки @line */
 
 .testwood-line [data-test]:before {
 	content: " ";
