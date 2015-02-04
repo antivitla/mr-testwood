@@ -74,6 +74,7 @@ function testwood(initialModules) {
 
 	menu.id = "testwood-menu";
 	document.body.appendChild(menu);
+	
 
 	// выделяем flex
 	
@@ -85,19 +86,40 @@ function testwood(initialModules) {
 	});
 	
 	
-	// так же нужно уметь пропарсить тесты и взять например комменты все
-	// и пихнуть их например перед блоком, а потом удалять опять
+	// Так же нужно уметь пропарсить тесты
 	
-	function parseTestBlocks(callback, callbackOfCallback) {
-		var allTestBlocks = document.querySelectorAll("*[data-test]"),
+	function parseTestBlocks(selector, callback, callbackOfCallback) {
+		var allTestBlocks = document.querySelectorAll(selector),
 			i;
+		callbackOfCallback = callbackOfCallback || function () {};
 		for (i = 0; i < allTestBlocks.length; i = i + 1) {
 			callbackOfCallback(callback(allTestBlocks[i]));
 		}
 	}
 	
-	function findComment(element) {
-		var iterator = element.previousSibling,
+	// Обернуть всё в доп. контейнеры чтоб навешивать слои разные
+	
+	function wrapTestBlocks(testContainer) {
+		var header = document.createElement("div"),
+			footer = document.createElement("div"),
+			wrapper = document.createElement("div");
+		header.setAttribute("data-test-header", "");
+		wrapper.setAttribute("data-test-wrapper", "");
+		footer.setAttribute("data-test-footer", "");
+		testContainer.parentElement.insertBefore(wrapper, testContainer);
+		wrapper.appendChild(header);
+		wrapper.appendChild(testContainer);
+		wrapper.appendChild(footer);
+		return testContainer;
+	}
+	
+	parseTestBlocks("*[data-test]", wrapTestBlocks);
+	
+	
+	// взять комменты все
+	
+	function findComment(testContainer) {
+		var iterator = testContainer.previousSibling,
 			comment;
 		
 		while (iterator) {
@@ -112,20 +134,63 @@ function testwood(initialModules) {
 		}
 		
 		return {
-			element: element,
+			element: testContainer,
 			comment: comment
 		};
 	}
 
-	parseTestBlocks(findComment, function (result) {
+	parseTestBlocks("*[data-test-wrapper]", findComment, function (result) {
 		if (!result.comment) {
 			console.warn("Блок", result.element, "без комментариев");
 			return;
 		}
-		var title = document.createElement("header");
+		var title = document.createElement("div");
 		title.classList.add("testwood-comment");
 		title.innerHTML = result.comment;
-		result.element.parentElement.insertBefore(title, result.element);
+		result.element.querySelectorAll("*[data-test-header]")[0].appendChild(title);
+	});
+	
+	
+	// парсим блоки на предмет высоты строки
+	
+	function findLineHeight(testContainer) {
+		var clone,
+			lineHeight;
+		// если внутри контейнера лежит всего один элемент,
+		// берем его лайнхейт, если же нет, берем наследуемый
+		if (testContainer.childElementCount < 2) {
+			clone = testContainer.children[0].cloneNode();
+			clone.innerHTML = "<br>";
+			testContainer.appendChild(clone);
+			lineHeight = clone.getBoundingClientRect().height;
+			testContainer.removeChild(clone);
+		} else {
+			clone = testContainer.cloneNode();
+			clone.innerHTML = "<br>";
+			testContainer.parentElement.appendChild(clone);
+			lineHeight = clone.getBoundingClientRect().height;
+			testContainer.parentElement.removeChild(clone);
+		}
+		
+		return {
+			element: testContainer,
+			lineHeight: lineHeight
+		};
+	}
+	
+	parseTestBlocks("*[data-test]", findLineHeight, function (result) {
+		var footer = result.element.parentElement.querySelectorAll("*[data-test-footer]")[0],
+			lines = document.createElement("div"),
+			line,
+			i;
+		for (i = 0; i <= result.element.getBoundingClientRect().height / result.lineHeight; i = i + 1) {
+			line = document.createElement("div");
+			line.innerHTML = "&nbsp;";
+			lines.appendChild(line);
+		}
+		lines.style.lineHeight = result.lineHeight + "px";
+		lines.classList.add("testwood-line-height");
+		footer.appendChild(lines);
 	});
 }
 
