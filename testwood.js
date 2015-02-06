@@ -80,7 +80,7 @@ function testwood(initialModules) {
 	
 	allElements = Array.prototype.slice.call(document.body.getElementsByTagName("*"), 0);
 	allElements.forEach(function (tag) {
-		if (getComputedStyle(tag).display === "flex") {
+		if (getComputedStyle(tag).display === "flex" || getComputedStyle(tag).display === "inline-flex") {
 			tag.setAttribute("data-test-flex", "");
 		}
 	});
