@@ -154,24 +154,12 @@ function testwood(initialModules) {
 	// парсим блоки на предмет высоты строки
 	
 	function findLineHeight(testContainer) {
-		var clone,
+		var clone = document.createElement("div"),
 			lineHeight;
-		// если внутри контейнера лежит всего один элемент,
-		// берем его лайнхейт, если же нет, берем наследуемый
-		if (testContainer.childElementCount < 2) {
-			clone = testContainer.children[0].cloneNode();
-			clone.innerHTML = "<br>";
-			testContainer.appendChild(clone);
-			lineHeight = clone.getBoundingClientRect().height;
-			testContainer.removeChild(clone);
-		} else {
-			clone = testContainer.cloneNode();
-			clone.innerHTML = "<br>";
-			testContainer.parentElement.appendChild(clone);
-			lineHeight = clone.getBoundingClientRect().height;
-			testContainer.parentElement.removeChild(clone);
-		}
-		
+		clone.innerHTML = "<br>";
+		testContainer.appendChild(clone);
+		lineHeight = clone.getBoundingClientRect().height;
+		testContainer.removeChild(clone);
 		return {
 			element: testContainer,
 			lineHeight: lineHeight
