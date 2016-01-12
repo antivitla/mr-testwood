@@ -1,10 +1,10 @@
 {
   "name": "testwood",
   "main": [
-    "testwood.js", 
+    "testwood.js",
     "testwood.css"
   ],
-  "version": "0.2.2",
+  "version": "0.2.3",
   "authors": [
     "Виталий Кулешин <antivitla@gmail.com>"
   ],
