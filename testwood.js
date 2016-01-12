@@ -6,7 +6,7 @@ if (window["jQuery"]) {
 		"use strict";
 
 		function testwood(initialModules) {
-			
+
 			if (document.getElementById("testwood-menu")) {
 				console.log("Testwood уже инициализирован");
 				return;
@@ -21,14 +21,14 @@ if (window["jQuery"]) {
 				allElements;
 
 			function readState(moduleName) {
-				if (!localStorage) {
+				if (!localStorage || localStorage.getItem) {
 					return;
 				}
 				return (localStorage.getItem("testwood-" + moduleName) === "true" ? true : false);
 			}
 
 			function sync2localstorage(moduleObj) {
-				if (!localStorage) {
+				if (!localStorage || localStorage.setItem) {
 					return;
 				}
 				localStorage.setItem("testwood-" + moduleObj.name, moduleObj.active);
@@ -202,14 +202,14 @@ if (window["jQuery"]) {
 			});
 		});
 	}());
-	
+
 } else {
 
 	(function () {
 		"use strict";
 
 		function testwood(initialModules) {
-			
+
 			if (document.getElementById("testwood-menu")) {
 				console.log("Testwood уже инициализирован");
 				return;
@@ -224,10 +224,16 @@ if (window["jQuery"]) {
 				allElements;
 
 			function readState(moduleName) {
+				if (!localStorage || localStorage.getItem) {
+					return;
+				}
 				return (localStorage.getItem("testwood-" + moduleName) === "true" ? true : false);
 			}
 
 			function sync2localstorage(moduleObj) {
+				if (!localStorage || localStorage.setItem) {
+					return;
+				}
 				localStorage.setItem("testwood-" + moduleObj.name, moduleObj.active);
 			}
 
