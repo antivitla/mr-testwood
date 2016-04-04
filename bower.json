@@ -4,13 +4,20 @@
     "testwood.js",
     "testwood.css"
   ],
-  "version": "0.2.3",
+  "version": "0.2.4",
   "authors": [
     "Виталий Кулешин <antivitla@gmail.com>"
   ],
   "description": "HTML/CSS Testing Tool",
   "moduleType": [
     "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
   ],
   "license": "MIT"
 }
