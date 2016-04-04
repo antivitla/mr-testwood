@@ -21,14 +21,14 @@ if (window["jQuery"]) {
 				allElements;
 
 			function readState(moduleName) {
-				if (!localStorage || localStorage.getItem) {
+				if (!localStorage || !localStorage.getItem) {
 					return;
 				}
 				return (localStorage.getItem("testwood-" + moduleName) === "true" ? true : false);
 			}
 
 			function sync2localstorage(moduleObj) {
-				if (!localStorage || localStorage.setItem) {
+				if (!localStorage || !localStorage.setItem) {
 					return;
 				}
 				localStorage.setItem("testwood-" + moduleObj.name, moduleObj.active);
